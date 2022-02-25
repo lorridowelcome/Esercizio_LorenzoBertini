@@ -3,12 +3,12 @@ var state = [];
 function setDefaultState() {
   var id = generateID();
   var baseState = {};
-  baseState[id] = {
-    status: "inserted",
+  baseState[id] = {    
     id: id,
     title: "NewTask",
     description: "We use 🍪 to keep track of your tasks",
-    dueDate: "25/02/2022"
+    dueDate: "25/02/2022",
+    status: "inserted"
   };
   syncState(baseState);
 }
@@ -18,20 +18,29 @@ function generateID() {
   return randLetter + Date.now();
 }
 
-function pushToState(title, status, id) {
+function pushToState(id, title, description, dueDate, status) {
   var baseState = getState();
-  baseState[id] = { id: id, title: title, status: status };
+  baseState[id] = {
+    id,
+    title,
+    description,
+    dueDate,
+    status
+   };
   syncState(baseState);
 }
 
 function setToDone(id) {
   var baseState = getState();
-  if (baseState[id].status === 'new') {
-    baseState[id].status = 'done'
-  } else {
-    baseState[id].status =  'new';
+  if (baseState[id].status === 'inserted') {
+    baseState[id].status = 'inprogress'
   }
-
+  if (baseState[id].status === 'inprogress') {
+    baseState[id].status = 'completed'
+  }
+  if (baseState[id].status === 'completed') {
+    baseState[id].status = 'inserted'
+  }  
   syncState(baseState);
 }
 
@@ -56,7 +65,7 @@ function getState() {
 
 function addItem(text, status, id, noUpdate) {
   var id = id ? id : generateID();
-  var c = status === "done" ? "danger" : "";
+  var c = status === "inserted" ? "danger" : "";
   var item =
     '<li data-id="' +
     id +
@@ -81,9 +90,7 @@ function addItem(text, status, id, noUpdate) {
 
   $(".no-items").addClass("hidden");
 
-  $(".form-control")
-    .val("")
-    //.attr("placeholder", "✍️ Add item...");
+  $(".form-control").val("")
   setTimeout(function() {
     $(".todo-list li").removeClass("animated flipInX");
   }, 500);
