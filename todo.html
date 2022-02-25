@@ -14,7 +14,7 @@
     <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.4.0/animate.min.css'>
     <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'>
     <link rel="stylesheet" href="todo.css">
-    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">    
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
 </head>
 
 <body>
@@ -113,8 +113,8 @@
                                 placeholder="📝 Add a description..."></textarea>
                         </div>
                         <div class="form-group has-feedback">
-                            <select id="statuses" class="form-control">
-                                <option value="0" selected>📃 Set a status...</option>
+                            <select id="statuses" name="statuses" class="form-control" style="height:36px">
+                                <option value="0">📃 Set a status...</option>
                                 <option value="1">Inserted</option>
                                 <option value="2">In progress</option>
                                 <option value="3">Completed</option>
@@ -141,11 +141,10 @@
         <script src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js"></script>
         <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
         <script src="https://npmcdn.com/flatpickr/dist/l10n/it.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     </body>
     <div class"footer">
         <h4>
-            Made with 🧠 by <a href="https://lorridoindustries.net">Lorrido Industries</a>
+            Made by <a href="https://lorridoindustries.net">Lorrido Industries</a>
         </h4>
     </div>
 </body>
