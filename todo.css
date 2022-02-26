@@ -25,7 +25,7 @@
   background: #5529dc;
 }
 .todo-list li.danger label {
-  text-decoration: line-through;
+  /* text-decoration: line-through; */
   color: #fff;
 }
 .todo-list li.danger label .checkbox-mask {
@@ -68,7 +68,8 @@
   height: 16px;
   top: 50%;
   margin-top: -8px;
-  right: 10px;
+  right: 20px;
+  transform: scale(1.5);
   font-size: 16px;
 }
 .todo-list li .close .fa {
@@ -77,6 +78,7 @@
 .todo-list li:hover .close {
   display: block;
 }
+
 .has-feedback .fa {
   line-height: 35px;
   cursor: pointer;
@@ -262,6 +264,7 @@ a:focus, a:hover {
   content: "\f00d";
   color: #000;
 }
+
 @media (max-width: 768px) {
   .col-xs-offset-3 {
     margin-left: 10%;
@@ -279,7 +282,7 @@ a:focus, a:hover {
 @media (min-width: 992px) {
   .container {
     width: 100%;
-    max-width: 1150PX;
+    max-width: 1350PX;
  }
 }
 @media (max-width: 680px) {

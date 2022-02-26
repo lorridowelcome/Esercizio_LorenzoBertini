@@ -6,7 +6,7 @@ function setDefaultState() {
     baseState[id] = {
         id: id,
         title: "NewTask",
-        description: "We use 🍪 to keep track of your tasks",
+        desc: "We use 🍪 to keep track of your tasks",
         dueDate: "25/02/2022",
         status: "inserted"
     };
@@ -18,12 +18,12 @@ function generateID() {
     return randLetter + Date.now();
 }
 
-function pushToState(id, title, description, dueDate, status) {
+function pushToState(id, title, desc, dueDate, status) {
     var baseState = getState();
     baseState[id] = {
         id,
         title,
-        description,
+        desc,
         dueDate,
         status
     };
@@ -33,7 +33,7 @@ function pushToState(id, title, description, dueDate, status) {
 function setToDone(id) {
     var baseState = getState();
     if (baseState[id].status === 'inserted') {
-        baseState[id].status = 'inprogress'
+        baseState[id].status = ''
     }
     if (baseState[id].status === 'inprogress') {
         baseState[id].status = 'completed'
@@ -63,24 +63,29 @@ function getState() {
     return JSON.parse(localStorage.getItem("state"));
 }
 
-function addItem(text, status, id, noUpdate) {
+function addItem(title, desc, dueDate, status, id, noUpdate) {
     var id = id ? id : generateID();
-    var c = status === "inserted" ? "danger" : "";
+    //var c = status === "inserted" ? "danger" : "";    
     var item =
         '<li data-id="' +
         id +
         '" class="animated flipInX ' +
-        c +
-        '"><div class="checkbox"><span class="close"><i class="fa fa-times"></i></span><label><span class="checkbox-mask"></span><input type="checkbox" />' +
-        text +
+        status +
+        '"><div class="checkbox"><span class="close delete"><i class="fa fa-times"></i></span><span class="close edit" style="right:50px !important"><i class="fa fa-gear"></i></span><label><span class="checkbox-mask"></span><input type="checkbox" />' +
+        title + desc + dueDate +
         "</label></div></li>";
 
     var isError = $(".form-control").hasClass("hidden");
 
-    if (text === "") {
-        $(".err")
-            .removeClass("hidden")
-            .addClass("animated bounceIn");
+    if (title === "" || desc === "" || dueDate === "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Insert a task!',
+            showConfirmButton: false,
+            timer: 2500
+        })
+        return
     } else {
         $(".err").addClass("hidden");
         $(".todo-list").append(item);
@@ -90,13 +95,15 @@ function addItem(text, status, id, noUpdate) {
 
     $(".no-items").addClass("hidden");
 
-    //$(".form-control").val("")
+    $(".todotitle").val("")
+    $(".tododesc").val("")
+    $(".tododuedate").val("")
     setTimeout(function () {
         $(".todo-list li").removeClass("animated flipInX");
     }, 500);
 
-    if (!noUpdate) {
-        pushToState(text, "new", id);
+    if (!noUpdate && title !== "" && desc !== "" && dueDate !== "") {
+        pushToState(id, title, desc, dueDate, status);
     }
 }
 
@@ -126,9 +133,24 @@ function initDatePicker() {
                 altInput: true,
                 altFormat: "d/m/Y",
                 dateFormat: "d/m/Y",
-                defaultDate: "today"
+                //defaultDate: "today"
             });
     }
+}
+
+function updateOneTask() {
+    var id = $('.id-m').val()
+    var title = $('.title-m').val()
+    var desc = $('.desc-m').val()
+    var dueDate = $('.duedate-m').val()
+    var status = $('.status-m').val()
+
+    var state = getState()
+    state[id].title = title
+    state[id].desc = desc
+    state[id].dueDate = dueDate
+    state[id].status = status
+    syncState(state)
 }
 
 $(function () {
@@ -143,8 +165,15 @@ $(function () {
     }
 
     $(".add-btn").on("click", function () {
-        var itemVal = $(".todoitem").val();
-        addItem(itemVal);
+        var title = $(".todotitle").val();
+        var desc = $(".tododesc").val();
+        var dueDate = $(".tododuedate").val();
+        var itemVal = {
+            title,
+            desc,
+            dueDate
+        }
+        addItem(itemVal.title, itemVal.desc, itemVal.dueDate, "inserted");
         formControl.focus();
     });
 
@@ -158,14 +187,15 @@ $(function () {
         li.toggleClass("danger");
         li.toggleClass("animated flipInX");
 
-        setToDone(li.data().id);
+        //setToDone(li.data().id);   
+
 
         setTimeout(function () {
             li.removeClass("animated flipInX");
         }, 500);
     });
 
-    $(".todo-list").on("click", ".close", function () {
+    $(".todo-list").on("click", ".delete", function () {
         var box = $(this)
             .parent()
             .parent();
@@ -187,10 +217,31 @@ $(function () {
         deleteTodo(box.data().id)
     });
 
+    $(".todo-list").on("click", ".edit", function () {
+        $('#modalEdit').modal("show")
+        var id = $(this)
+            .parent()
+            .parent()
+            .data().id
+
+        var state = getState();
+
+        var title = state[id].title
+        var desc = state[id].desc
+        var dueDate = state[id].dueDate
+        var status = state[id].status
+        
+        $('.id-m').val(id)
+        $('.title-m').val(title)
+        $('.desc-m').val(desc)
+        $('.duedate-m').val(dueDate)
+        $('.status-m').val(status)
+    });
+
     $(".todoitem").keypress(function (e) {
         if (e.which == 13) {
             var itemVal = $(".todoitem").val();
-            addItem(itemVal);
+            addItem(itemVal.title, itemVal.desc, itemVal.dueDate, "inserted");
         }
     });
     $(".todo-list").sortable();
@@ -246,7 +297,7 @@ $(document).ready(function () {
 
     Object.keys(state).forEach(function (todoKey) {
         var todo = state[todoKey];
-        addItem(todo.title, todo.status, todo.id, true);
+        addItem(todo.title, todo.desc, todo.dueDate, todo.status, todo.id, true);
     });
 
     var mins, secs, update;
