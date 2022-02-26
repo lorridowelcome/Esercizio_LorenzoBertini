@@ -4,8 +4,7 @@
     <title>Todo List</title>
     <meta name="viewport" content="height=device-height, initial-scale=1, user-scalable=no">
     <meta name="description" content="Todo List - Made by Lorrido Industries" />
-    <link rel="shortcut icon"
-        href="https://www.pinclipart.com/picdir/big/0-8759_jpg-royalty-free-library-checkmark-clipart-blue-check.png">
+    <link rel="shortcut icon" href="https://www.pinclipart.com/picdir/big/0-8759_jpg-royalty-free-library-checkmark-clipart-blue-check.png">
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,700" rel="stylesheet">
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
@@ -18,8 +17,7 @@
 
 <body>
     <div class="logo">
-        <svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink">
+        <svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <desc>Created with Sketch.</desc>
             <defs>
                 <linearGradient x1="34.9523037%" y1="0%" x2="116.039609%" y2="115.484477%" id="linearGradient-1">
@@ -108,8 +106,7 @@
                             <i class="fa fa-plus form-control-feedback add-btn" title="Add a task"></i>
                         </div>
                         <div class="form-group has-feedback">
-                            <textarea type="textarea" class="form-control tododesc" rows="4" cols="50"
-                                placeholder="📝 Add a description..."></textarea>
+                            <textarea type="textarea" class="form-control tododesc" rows="4" cols="50" placeholder="📝 Add a description..."></textarea>
                         </div>
                         <!-- <div class="form-group has-feedback">
                             <select id="statuses" name="statuses" class="form-control todoitem" style="height:36px">
@@ -120,29 +117,30 @@
                             </select>
                         </div> -->
                         <div class="form-group has-feedback">
-                            <input type="text" class="form-control datepick tododuedate"
-                                placeholder="📅 Choose a due date..." />
+                            <input type="text" class="form-control datepick tododuedate" placeholder="📅 Choose a due date..." />
                         </div>
                     </div>
-                    <p class="err text-danger text-center hidden"><i class="fa fa-warning"></i> Oops! Please, enter an
-                        item</p>
+                    <p class="err text-danger text-center hidden"><i class="fa fa-warning"></i> Oops! Please, enter an item
+                    </p>
                     <p class="no-items text-muted text-center hidden"><i class="fa fa-ban"></i></p>
                     <!-- <ul class="todo-list">
                     </ul> -->
-                    <!-- <input type="button" class="btn btm-primary hidden refresh" /> -->
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="margin-top:5rem">
                 <div class="col-md-4">
-                    <ul class="todo-list">
+                    <div class="today">Inserted ⌨️</div>
+                    <ul class="todo-list" id="todo-list-inserted">
                     </ul>
                 </div>
                 <div class="col-md-4">
-                    <ul class="todo-list-progress">
+                    <div class="today">In progress 🔁</div>
+                    <ul class="todo-list" id="todo-list-inprogress">
                     </ul>
                 </div>
                 <div class="col-md-4">
-                    <ul class="todo-list-completed">
+                    <div class="today">Completed 🚀</div>
+                    <ul class="todo-list" id="todo-list-completed">
                     </ul>
                 </div>
             </div>
@@ -160,7 +158,7 @@
         <script src="https://npmcdn.com/flatpickr/dist/l10n/it.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </body>
-    <div class"footer">
+    <div class "footer">
         <h4>
             Made by <a href="https://lorridoindustries.net">Lorrido Industries</a>
         </h4>
@@ -173,24 +171,25 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title" style="color: black;">View and edit your task</h4>
-                <input type="hidden" name="id-m" class="id-m" value=""/>
+                <input type="hidden" name="id-m" class="id-m" value="" />
+                <input type="hidden" name="status-m-hidden" class="status-m-hidden" value="" />
             </div>
             <div class="modal-body">
                 <div class="form-group">
                     <label>Title:</label>
-                    <input type="text" name="title" class="form-control title-m" />
+                    <input type="text" name="title" class="form-control title-m modal-border" />
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <input type="text" name="desc" class="form-control desc-m" />
+                    <textarea type="textarea" name="desc-m" class="form-control desc-m modal-border" rows="4" cols="50"></textarea>
                 </div>
                 <div class="form-group">
                     <label>Due date</label>
-                    <input type="text" name="dueDate" class="form-control duedate-m" />
+                    <input type="text" name="dueDate" class="form-control duedate-m datepick modal-border" />
                 </div>
                 <div class="form-group">
                     <label>Status</label>
-                    <select id="status-m" name="status-m" class="form-control status-m" style="padding-left: 10px;padding-top: 6px;" >
+                    <select id="status-m" name="status-m" class="form-control status-m modal-border" style="padding-left: 10px;padding-top: 6px;">
                         <option value="inserted">Inserted</option>
                         <option value="inprogress">In progress</option>
                         <option value="completed">Completed</option>

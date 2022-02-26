@@ -30,19 +30,19 @@ function pushToState(id, title, desc, dueDate, status) {
     syncState(baseState);
 }
 
-function setToDone(id) {
-    var baseState = getState();
-    if (baseState[id].status === 'inserted') {
-        baseState[id].status = ''
-    }
-    if (baseState[id].status === 'inprogress') {
-        baseState[id].status = 'completed'
-    }
-    if (baseState[id].status === 'completed') {
-        baseState[id].status = 'inserted'
-    }
-    syncState(baseState);
-}
+// function setToDone(id) {
+//     var baseState = getState();
+//     if (baseState[id].status === 'inserted') {
+//         baseState[id].status = ''
+//     }
+//     if (baseState[id].status === 'inprogress') {
+//         baseState[id].status = 'completed'
+//     }
+//     if (baseState[id].status === 'completed') {
+//         baseState[id].status = 'inserted'
+//     }
+//     syncState(baseState);
+// }
 
 function deleteTodo(id) {
     console.log(id)
@@ -71,7 +71,16 @@ function addItem(title, desc, dueDate, status, id, noUpdate) {
         id +
         '" class="animated flipInX ' +
         status +
-        '"><div class="checkbox"><span class="close delete"><i class="fa fa-times"></i></span><span class="close edit" style="right:50px !important"><i class="fa fa-gear"></i></span><label><span class="checkbox-mask"></span><input type="checkbox" />' +
+        '"><div class="checkbox"><span class="close delete"><i class="fa fa-times"></i></span><span class="close edit" style="right:50px !important"><i class="fa fa-edit"></i></span><label><span class="checkbox-mask"></span><input type="checkbox" />' +
+        title + desc + dueDate +
+        "</label></div></li>";
+
+    var itemDone =
+        '<li data-id="' +
+        id +
+        '" class="danger animated flipInX s' +
+        status +
+        '"><div class="checkbox"><span class="close delete"><i class="fa fa-times"></i></span><span class="close edit" style="right:50px !important"><i class="fa fa-edit"></i></span><label><span class="checkbox-mask"></span><input type="checkbox" />' +
         title + desc + dueDate +
         "</label></div></li>";
 
@@ -88,17 +97,23 @@ function addItem(title, desc, dueDate, status, id, noUpdate) {
         return
     } else {
         $(".err").addClass("hidden");
-        $(".todo-list").append(item);
+        if (status === "inserted") {
+            $("#todo-list-inserted").append(item);
+        }
+        if (status === "inprogress") {
+            $("#todo-list-inprogress").append(item);
+        }
+        if (status === "completed") {
+            $("#todo-list-completed").append(itemDone);
+        }
     }
-
-    $(".refresh").removeClass("hidden");
 
     $(".no-items").addClass("hidden");
 
     $(".todotitle").val("")
     $(".tododesc").val("")
     $(".tododuedate").val("")
-    setTimeout(function () {
+    setTimeout(function() {
         $(".todo-list li").removeClass("animated flipInX");
     }, 500);
 
@@ -107,34 +122,48 @@ function addItem(title, desc, dueDate, status, id, noUpdate) {
     }
 }
 
-function refresh() {
-    $(".todo-list li").each(function (i) {
-        $(this)
-            .delay(70 * i)
-            .queue(function () {
-                $(this).addClass("animated bounceOutLeft");
-                $(this).dequeue();
-            });
-    });
+function refresh(li) {
 
-    setTimeout(function () {
-        $(".todo-list li").remove();
+    li.delay(70)
+        .queue(function() {
+            $(this).addClass("animated bounceOutLeft");
+            $(this).dequeue();
+        });
+
+    setTimeout(function() {
+        li.remove();
         $(".no-items").removeClass("hidden");
         $(".err").addClass("hidden");
     }, 800);
+
+    setTimeout(() => {
+        var id = li.data().id
+        var statez = getState();
+
+        if (!statez) {
+            setDefaultState();
+            statez = getState();
+        }
+
+        var x = statez[id]
+
+        addItem(statez[id].title, statez[id].desc, statez[id].dueDate, statez[id].status, statez[id].id, true);
+
+    }, 800);
 }
+
+
 
 function initDatePicker() {
     if (document.querySelector(".datepick")) {
-        flatpickr(".datepick",
-            {
-                allowInput: true,
-                locale: "it",
-                altInput: true,
-                altFormat: "d/m/Y",
-                dateFormat: "d/m/Y",
-                //defaultDate: "today"
-            });
+        flatpickr(".datepick", {
+            allowInput: true,
+            locale: "it",
+            altInput: true,
+            altFormat: "d/m/Y",
+            dateFormat: "d/m/Y",
+            //defaultDate: "today"
+        });
     }
 }
 
@@ -145,26 +174,63 @@ function updateOneTask() {
     var dueDate = $('.duedate-m').val()
     var status = $('.status-m').val()
 
-    var state = getState()
-    state[id].title = title
-    state[id].desc = desc
-    state[id].dueDate = dueDate
-    state[id].status = status
-    syncState(state)
+    var baseState = getState()
+    baseState[id].title = title
+    baseState[id].desc = desc
+    baseState[id].dueDate = dueDate
+    baseState[id].status = status
+    syncState(baseState)
+    $('#modalEdit').modal("hide")
+    location.reload()
 }
 
-$(function () {
+function checkStatus(id) {
+    var baseState = getState()
+    var status = baseState[id].status
+    return status
+}
+
+function getSwalDetails(status) {
+    var swalDetails
+    if (status === "inserted") {
+        swalDetails = {
+            title: "Task start!",
+            desc: "Are you starting this task?",
+            btn: "Yes, start it!",
+            status: "inprogress"
+        }
+    }
+    if (status === "inprogress") {
+        swalDetails = {
+            title: "All done!",
+            desc: "Are you completing this task?",
+            btn: "Yes, complete it!",
+            status: "completed"
+        }
+    }
+    if (status === "completed") {
+        swalDetails = {
+            title: "Switch to in progress!",
+            desc: "Are you working again on this task?",
+            btn: "Yes, let's work again on it!",
+            status: "inprogress"
+        }
+    }
+    return swalDetails
+}
+
+$(function() {
     var err = $(".err"),
         formControl = $(".form-control"),
         isError = formControl.hasClass("hidden");
 
     if (!isError) {
-        formControl.blur(function () {
+        formControl.blur(function() {
             err.addClass("hidden");
         });
     }
 
-    $(".add-btn").on("click", function () {
+    $(".add-btn").on("click", function() {
         var title = $(".todotitle").val();
         var desc = $(".tododesc").val();
         var dueDate = $(".tododuedate").val();
@@ -177,9 +243,18 @@ $(function () {
         formControl.focus();
     });
 
-    $(".refresh").on("click", refresh);
+    $(".todo-list").on("click", 'input[type="checkbox"]', function() {
+        var box = $(this)
+            .parent()
+            .parent()
+            .parent();
 
-    $(".todo-list").on("click", 'input[type="checkbox"]', function () {
+        var id = box.data().id
+
+        var statusCheck = checkStatus(id);
+
+        var swalDetails = getSwalDetails(statusCheck);
+
         var li = $(this)
             .parent()
             .parent()
@@ -187,50 +262,83 @@ $(function () {
         li.toggleClass("danger");
         li.toggleClass("animated flipInX");
 
-        //setToDone(li.data().id);   
-
-
-        setTimeout(function () {
+        setTimeout(function() {
             li.removeClass("animated flipInX");
         }, 500);
+
+        Swal.fire({
+            title: swalDetails.title,
+            text: swalDetails.desc,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: swalDetails.btn
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var baseState = getState()
+                baseState[id].status = swalDetails.status
+                syncState(baseState)
+                refresh(li)
+
+            } else {
+                li.toggleClass("danger");
+                li.toggleClass("animated flipInX");
+
+                setTimeout(function() {
+                    li.removeClass("animated flipInX");
+                }, 500);
+            }
+        })
     });
 
-    $(".todo-list").on("click", ".delete", function () {
-        var box = $(this)
-            .parent()
-            .parent();
+    $(".todo-list").on("click", ".delete", function() {
 
-        if ($(".todo-list li").length == 1) {
-            box.removeClass("animated flipInX").addClass("animated                bounceOutLeft");
-            setTimeout(function () {
-                box.remove();
-                $(".no-items").removeClass("hidden");
-                $(".refresh").addClass("hidden");
-            }, 500);
-        } else {
-            box.removeClass("animated flipInX").addClass("animated bounceOutLeft");
-            setTimeout(function () {
-                box.remove();
-            }, 500);
-        }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var box = $(this)
+                    .parent()
+                    .parent();
+                if ($(".todo-list li").length == 1) {
+                    box.removeClass("animated flipInX").addClass("animated                bounceOutLeft");
+                    setTimeout(function() {
+                        box.remove();
+                        $(".no-items").removeClass("hidden");
+                    }, 500);
+                } else {
+                    box.removeClass("animated flipInX").addClass("animated bounceOutLeft");
+                    setTimeout(function() {
+                        box.remove();
+                    }, 500);
+                }
 
-        deleteTodo(box.data().id)
+                deleteTodo(box.data().id)
+            }
+        })
     });
 
-    $(".todo-list").on("click", ".edit", function () {
+    $(".todo-list").on("click", ".edit", function() {
         $('#modalEdit').modal("show")
         var id = $(this)
             .parent()
             .parent()
             .data().id
 
-        var state = getState();
+        var baseState = getState();
 
-        var title = state[id].title
-        var desc = state[id].desc
-        var dueDate = state[id].dueDate
-        var status = state[id].status
-        
+        var title = baseState[id].title
+        var desc = baseState[id].desc
+        var dueDate = baseState[id].dueDate
+        var status = baseState[id].status
+
         $('.id-m').val(id)
         $('.title-m').val(title)
         $('.desc-m').val(desc)
@@ -238,14 +346,14 @@ $(function () {
         $('.status-m').val(status)
     });
 
-    $(".todoitem").keypress(function (e) {
-        if (e.which == 13) {
-            var itemVal = $(".todoitem").val();
-            addItem(itemVal.title, itemVal.desc, itemVal.dueDate, "inserted");
-        }
-    });
-    $(".todo-list").sortable();
-    $(".todo-list").disableSelection();
+    // $(".todoitem").keypress(function (e) {
+    //     if (e.which == 13) {
+    //         var itemVal = $(".todoitem").val();
+    //         addItem(itemVal.title, itemVal.desc, itemVal.dueDate, "inserted");
+    //     }
+    // });
+    // $(".todo-list").sortable();
+    // $(".todo-list").disableSelection();
 });
 
 var todayContainer = document.querySelector(".today");
@@ -284,7 +392,7 @@ var randomWord =
 
 todayContainer.innerHTML = randomWord + n;
 
-$(document).ready(function () {
+$(document).ready(function() {
 
     initDatePicker();
 
@@ -295,7 +403,7 @@ $(document).ready(function () {
         state = getState();
     }
 
-    Object.keys(state).forEach(function (todoKey) {
+    Object.keys(state).forEach(function(todoKey) {
         var todo = state[todoKey];
         addItem(todo.title, todo.desc, todo.dueDate, todo.status, todo.id, true);
     });
@@ -303,12 +411,14 @@ $(document).ready(function () {
     var mins, secs, update;
 
     init();
+
     function init() {
         (mins = 25), (secs = 59);
     }
 
 
     set();
+
     function set() {
         $(".mins").text(mins);
     }
@@ -370,4 +480,3 @@ $(document).ready(function () {
         }
     }
 });
-
