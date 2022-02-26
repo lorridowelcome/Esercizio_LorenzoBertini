@@ -126,7 +126,7 @@ function refresh(li) {
 
     li.delay(70)
         .queue(function() {
-            $(this).addClass("animated bounceOutLeft");
+            $(this).addClass("animated flipOutX");
             $(this).dequeue();
         });
 
@@ -308,13 +308,13 @@ $(function() {
                     .parent()
                     .parent();
                 if ($(".todo-list li").length == 1) {
-                    box.removeClass("animated flipInX").addClass("animated                bounceOutLeft");
+                    box.removeClass("animated flipInX").addClass("animated                flipOutX");
                     setTimeout(function() {
                         box.remove();
                         $(".no-items").removeClass("hidden");
                     }, 500);
                 } else {
-                    box.removeClass("animated flipInX").addClass("animated bounceOutLeft");
+                    box.removeClass("animated flipInX").addClass("animated flipOutX");
                     setTimeout(function() {
                         box.remove();
                     }, 500);
