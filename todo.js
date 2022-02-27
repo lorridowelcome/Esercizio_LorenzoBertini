@@ -67,14 +67,13 @@ function getState() {
 function addItem(title, desc, dueDate, status, id, noUpdate) {
 
     var id = id ? id : generateID();
-    //var c = status === "inserted" ? "danger" : "";    
     var item =
         '<li  data-id="' +
         id +
         '" class="animated flipInX ' +
         status +
-        '"><div class="checkbox"><span onmouseover="callTippy(this, `Delete task here`)" class="close delete"><i class="fa fa-times"></i></span><span onmouseover="callTippy(this, `Edit task here`)" class="close edit" style="right:50px !important"><i class="fa fa-edit"></i></span><label><span class="checkbox-mask"></span>' +
-        title + "<input type='checkbox' />" + "<br/><br/>" + desc + "<br/><br/>" + "Due date: " + dueDate +
+        '"><div class="checkbox"><span onmouseover="callTippy(this, `Delete task here`)" class="close delete"><i class="fa fa-times"></i></span><span onmouseover="callTippy(this, `Edit task here`)" class="close edit" style="right:48px !important"><i class="fa fa-pencil"></i></span><span onmouseover="callTippy(this, `View task here`)" class="close view" style="right:80px !important"><i class="fa fa-eye"></i></span><label><span class="checkbox-mask"></span><label><span class="checkbox-mask"></span>' +
+        title + "<input type='checkbox' />" + "<br/><br/>" + desc.slice(0, 29) + "..." + "<br/><br/>" + "Due date: " + dueDate +
         "</label></div></li>";
 
     var itemDone =
@@ -82,8 +81,8 @@ function addItem(title, desc, dueDate, status, id, noUpdate) {
         id +
         '" class="danger animated flipInX ' +
         status +
-        '"><div class="checkbox"><span onmouseover="callTippy(this, `Delete task here`)" class="close delete"><i class="fa fa-times"></i></span><span onmouseover="callTippy(this, `Edit task here`)" class="close edit" style="right:50px !important"><i class="fa fa-edit"></i></span><label><span class="checkbox-mask"></span>' +
-        title + "<input type='checkbox' />" + "<br/><br/>" + desc + "<br/><br/>" + "Due date: " + dueDate +
+        '"><div class="checkbox"><span onmouseover="callTippy(this, `Delete task here`)" class="close delete"><i class="fa fa-times"></i></span><span onmouseover="callTippy(this, `Edit task here`)" class="close edit" style="right:48px !important"><i class="fa fa-pencil"></i></span><span onmouseover="callTippy(this, `View task here`)" class="close view" style="right:80px !important"><i class="fa fa-eye"></i></span><label><span class="checkbox-mask"></span><label><span class="checkbox-mask"></span>' +
+        title + "<input type='checkbox' />" + "<br/><br/>" + desc.slice(0, 29) + "..." + "<br/><br/>" + "Due date: " + dueDate +
         "</label></div></li>";
 
     var isError = $(".form-control").hasClass("d-none");
@@ -164,7 +163,6 @@ function initDatePicker() {
             altInput: true,
             altFormat: "d/m/Y",
             dateFormat: "d/m/Y",
-            //defaultDate: "today"
         });
     }
 }
@@ -249,7 +247,9 @@ $(function() {
         var box = $(this)
             .parent()
             .parent()
-            .parent();
+            .parent()
+            .parent()
+
 
         var id = box.data().id
 
@@ -260,7 +260,9 @@ $(function() {
         var li = $(this)
             .parent()
             .parent()
-            .parent();
+            .parent()
+            .parent()
+
         li.toggleClass("danger");
         li.toggleClass("animated flipInX");
 
@@ -308,7 +310,8 @@ $(function() {
             if (result.isConfirmed) {
                 var box = $(this)
                     .parent()
-                    .parent();
+                    .parent()
+
                 if ($(".todo-list li").length == 1) {
                     box.removeClass("animated flipInX").addClass("animated                flipOutX");
                     setTimeout(function() {
@@ -341,6 +344,7 @@ $(function() {
         var dueDate = baseState[id].dueDate
         var status = baseState[id].status
 
+        $('.editTitle').text("Edit task - " + title)
         $('.id-m').val(id)
         $('.title-m').val(title)
         $('.desc-m').val(desc)
@@ -348,24 +352,35 @@ $(function() {
         $('.status-m').val(status)
     });
 
-    // $(".todoitem").keypress(function (e) {
-    //     if (e.which == 13) {
-    //         var itemVal = $(".todoitem").val();
-    //         addItem(itemVal.title, itemVal.desc, itemVal.dueDate, "inserted");
-    //     }
-    // });
-    // $(".todo-list").sortable();
-    // $(".todo-list").disableSelection();
+    $(".todo-list").on("click", ".view", function() {
+        $('#modalView').modal("show")
+        var id = $(this)
+            .parent()
+            .parent()
+            .data().id
+
+        var baseState = getState();
+
+        var title = baseState[id].title
+        var desc = baseState[id].desc
+        var dueDate = baseState[id].dueDate
+        var status = baseState[id].status
+
+        $('.viewTitle').text("View task - " + title)
+        $('.id-v').val(id)
+        $('.title-v').val(title)
+        $('.desc-v').val(desc)
+        $('.duedate-v').val(dueDate)
+        $('.status-v').val(status)
+    });
 });
 
 var todayContainer = document.querySelector(".today");
 
-
 var d = new Date();
 
-
 var weekday = new Array(7);
-weekday[0] = "Sunday 🖖";
+weekday[0] = "Sunday ☀️";
 weekday[1] = "Monday 💪😀";
 weekday[2] = "Tuesday 😜";
 weekday[3] = "Wednesday 😌☕️";
@@ -378,14 +393,15 @@ var n = weekday[d.getDay()];
 
 
 var randomWordArray = Array(
-    "Oh my, it's ",
+    "Sweet as, it's ",
     "Whoop, it's ",
     "Happy ",
     "Seems it's ",
     "Awesome, it's ",
     "Have a nice ",
     "Happy fabulous ",
-    "Enjoy your "
+    "Enjoy your ",
+    "ZOMG! It's "
 );
 
 var randomWord =

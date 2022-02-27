@@ -168,10 +168,10 @@
 </body>
 
 <div id="modalEdit" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" style="color: black;">View and edit your task</h3>
+                <h3 id="editTitle" class="modal-title" style="color: black;">Edit your task</h3>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <input type="hidden" name="id-m" class="id-m" value="" />
                 <input type="hidden" name="status-m-hidden" class="status-m-hidden" value="" />
@@ -200,6 +200,44 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" onclick="updateOneTask()">Update</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalView" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="viewTitle" class="modal-title" style="color: black;">View your task</h3>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <input type="hidden" name="id-v" class="id-v" value="" />
+                <input type="hidden" name="status-v-hidden" class="status-v-hidden" value="" />
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Title:</label>
+                    <input type="text" name="title-v" class="form-control title-v modal-border" disabled />
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea type="textarea" name="desc-v" class="form-control desc-v modal-border" rows="4" cols="50" disabled></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Due date</label>
+                    <input type="text" name="dueDate-v" class="form-control duedate-v datepick modal-border" disabled/>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="status-v" name="status-v" class="form-control status-v modal-border" style="padding-left: 10px;padding-top: 6px;" disabled>
+                        <option value="inserted">Inserted</option>
+                        <option value="inprogress">In progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
             </div>
         </div>

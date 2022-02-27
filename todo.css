@@ -69,7 +69,7 @@ textarea:focus::placeholder {
     margin: 0;
     padding: 10px 30px;
     border-radius: 5px;
-    width: 90%;
+    width: 75%;
 }
 
 .todo-list li label {
