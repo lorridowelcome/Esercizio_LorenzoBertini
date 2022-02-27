@@ -7,6 +7,14 @@
     font-size: 22px;
 }
 
+input:focus::placeholder {
+    color: white;
+}
+
+textarea:focus::placeholder {
+    color: white;
+}
+
 .animated.bounceIn,
 .animated.bounceOut,
 .animated.flipOutX,
@@ -34,6 +42,11 @@
     background: #5529dc;
 }
 
+.btn-todo {
+    background: #5529dc;
+    color: #fff;
+}
+
 .todo-list li.danger label {
     /* text-decoration: line-through; */
     color: #fff;
@@ -54,13 +67,15 @@
 
 .todo-list li .checkbox {
     margin: 0;
-    padding: 10px 15px;
+    padding: 10px 30px;
     border-radius: 5px;
+    width: 90%;
 }
 
 .todo-list li label {
     display: block;
     padding-right: 10px;
+    margin-top: .5rem;
 }
 
 .todo-list li label input[type="checkbox"] {
@@ -147,6 +162,13 @@
     border: none;
     padding: 10px 15px;
     outline: none;
+}
+
+.form-control:focus,
+.form-control:active,
+.form-control:active:focus {
+    background: #5529dc;
+    color: white;
 }
 
 .form-control {

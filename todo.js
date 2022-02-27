@@ -5,9 +5,9 @@ function setDefaultState() {
     var baseState = {};
     baseState[id] = {
         id: id,
-        title: "NewTask",
-        desc: "We use 🍪 to keep track of your tasks",
-        dueDate: "25/02/2022",
+        title: "Dev todo exercise",
+        desc: "Prepare a simple todo sw during the weekend",
+        dueDate: "02/03/2022",
         status: "inserted"
     };
     syncState(baseState);
@@ -30,19 +30,20 @@ function pushToState(id, title, desc, dueDate, status) {
     syncState(baseState);
 }
 
-// function setToDone(id) {
-//     var baseState = getState();
-//     if (baseState[id].status === 'inserted') {
-//         baseState[id].status = ''
-//     }
-//     if (baseState[id].status === 'inprogress') {
-//         baseState[id].status = 'completed'
-//     }
-//     if (baseState[id].status === 'completed') {
-//         baseState[id].status = 'inserted'
-//     }
-//     syncState(baseState);
-// }
+function tippyGo() {
+    tippy('#tippyGo', {
+        content: 'Start tippy!',
+    });
+}
+
+function callTippy(el, content) {
+    tippy(el, {
+        content: content,
+        animation: 'scale',
+        followCursor: true,
+        theme: 'tomato'
+    })
+}
 
 function deleteTodo(id) {
     console.log(id)
@@ -64,39 +65,40 @@ function getState() {
 }
 
 function addItem(title, desc, dueDate, status, id, noUpdate) {
+
     var id = id ? id : generateID();
     //var c = status === "inserted" ? "danger" : "";    
     var item =
-        '<li data-id="' +
+        '<li  data-id="' +
         id +
         '" class="animated flipInX ' +
         status +
-        '"><div class="checkbox"><span class="close delete"><i class="fa fa-times"></i></span><span class="close edit" style="right:50px !important"><i class="fa fa-edit"></i></span><label><span class="checkbox-mask"></span><input type="checkbox" />' +
-        title + desc + dueDate +
+        '"><div class="checkbox"><span onmouseover="callTippy(this, `Delete task here`)" class="close delete"><i class="fa fa-times"></i></span><span onmouseover="callTippy(this, `Edit task here`)" class="close edit" style="right:50px !important"><i class="fa fa-edit"></i></span><label><span class="checkbox-mask"></span>' +
+        title + "<input type='checkbox' />" + "<br/><br/>" + desc + "<br/><br/>" + "Due date: " + dueDate +
         "</label></div></li>";
 
     var itemDone =
         '<li data-id="' +
         id +
-        '" class="danger animated flipInX s' +
+        '" class="danger animated flipInX ' +
         status +
-        '"><div class="checkbox"><span class="close delete"><i class="fa fa-times"></i></span><span class="close edit" style="right:50px !important"><i class="fa fa-edit"></i></span><label><span class="checkbox-mask"></span><input type="checkbox" />' +
-        title + desc + dueDate +
+        '"><div class="checkbox"><span onmouseover="callTippy(this, `Delete task here`)" class="close delete"><i class="fa fa-times"></i></span><span onmouseover="callTippy(this, `Edit task here`)" class="close edit" style="right:50px !important"><i class="fa fa-edit"></i></span><label><span class="checkbox-mask"></span>' +
+        title + "<input type='checkbox' />" + "<br/><br/>" + desc + "<br/><br/>" + "Due date: " + dueDate +
         "</label></div></li>";
 
-    var isError = $(".form-control").hasClass("hidden");
+    var isError = $(".form-control").hasClass("d-none");
 
     if (title === "" || desc === "" || dueDate === "") {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Insert a task!',
+            text: 'Insert all task fields!',
             showConfirmButton: false,
             timer: 2500
         })
         return
     } else {
-        $(".err").addClass("hidden");
+        $(".err").addClass("d-none");
         if (status === "inserted") {
             $("#todo-list-inserted").append(item);
         }
@@ -108,7 +110,7 @@ function addItem(title, desc, dueDate, status, id, noUpdate) {
         }
     }
 
-    $(".no-items").addClass("hidden");
+    $(".no-items").addClass("d-none");
 
     $(".todotitle").val("")
     $(".tododesc").val("")
@@ -132,8 +134,8 @@ function refresh(li) {
 
     setTimeout(function() {
         li.remove();
-        $(".no-items").removeClass("hidden");
-        $(".err").addClass("hidden");
+        $(".no-items").removeClass("d-none");
+        $(".err").addClass("d-none");
     }, 800);
 
     setTimeout(() => {
@@ -222,11 +224,11 @@ function getSwalDetails(status) {
 $(function() {
     var err = $(".err"),
         formControl = $(".form-control"),
-        isError = formControl.hasClass("hidden");
+        isError = formControl.hasClass("d-none");
 
     if (!isError) {
         formControl.blur(function() {
-            err.addClass("hidden");
+            err.addClass("d-none");
         });
     }
 
@@ -311,7 +313,7 @@ $(function() {
                     box.removeClass("animated flipInX").addClass("animated                flipOutX");
                     setTimeout(function() {
                         box.remove();
-                        $(".no-items").removeClass("hidden");
+                        $(".no-items").removeClass("d-none");
                     }, 500);
                 } else {
                     box.removeClass("animated flipInX").addClass("animated flipOutX");
