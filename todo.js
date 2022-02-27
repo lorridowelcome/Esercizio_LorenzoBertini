@@ -344,7 +344,7 @@ $(function() {
         var dueDate = baseState[id].dueDate
         var status = baseState[id].status
 
-        $('.editTitle').text("Edit task - " + title)
+        $('#editTitle').text("Edit task - " + title)
         $('.id-m').val(id)
         $('.title-m').val(title)
         $('.desc-m').val(desc)
@@ -366,7 +366,7 @@ $(function() {
         var dueDate = baseState[id].dueDate
         var status = baseState[id].status
 
-        $('.viewTitle').text("View task - " + title)
+        $('#viewTitle').text("View task - " + title)
         $('.id-v').val(id)
         $('.title-v').val(title)
         $('.desc-v').val(desc)
