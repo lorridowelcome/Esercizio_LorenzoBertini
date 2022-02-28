@@ -1,26 +1,26 @@
 {
-  "name": "Esercizio_LorenzoBertini",
-  "version": "1.0.0",
-  "description": "",
-  "main": "todo.js",
-  "dependencies": {
-    "flatpickr": "^4.6.9",
-    "sweetalert2": "^11.4.4",
-    "tippy.js": "^6.3.7"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lorridowelcome/Esercizio_LorenzoBertini.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/lorridowelcome/Esercizio_LorenzoBertini/issues"
-  },
-  "homepage": "https://github.com/lorridowelcome/Esercizio_LorenzoBertini#readme"
+    "name": "esercizio_lorenzobertini",
+    "version": "1.0.0",
+    "description": "esercizio_lorenzobertini_todo",
+    "main": "todo.js",
+    "dependencies": {
+        "flatpickr": "^4.6.9",
+        "sweetalert2": "^11.4.4",
+        "tippy.js": "^6.3.7"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/lorridowelcome/Esercizio_LorenzoBertini.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/lorridowelcome/Esercizio_LorenzoBertini/issues"
+    },
+    "homepage": "https://github.com/lorridowelcome/Esercizio_LorenzoBertini#readme"
 }
